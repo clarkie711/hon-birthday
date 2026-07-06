@@ -67,7 +67,7 @@
             transition: transform 0.3s ease;
         }
 
-        /* Specific positions and rotations for each of the 6 surrounding photos */
+        /* Desktop layout coordinates for the background photos */
         .pic-tl { width: 110px; height: 140px; top: 8%; left: 6%; transform: rotate(-8deg); }
         .pic-cl { width: 120px; height: 120px; top: 42%; left: 4%; transform: rotate(6deg); }
         .pic-bl { width: 100px; height: 130px; bottom: 8%; left: 8%; transform: rotate(-5deg); }
@@ -76,17 +76,18 @@
         .pic-cr { width: 110px; height: 140px; top: 45%; right: 5%; transform: rotate(-7deg); }
         .pic-br { width: 130px; height: 130px; bottom: 10%; right: 6%; transform: rotate(4deg); }
 
-        /* Responsive scaling down for smaller mobile screens */
+        /* MOBILE FIX FOR BACKGROUND PHOTOS: Pushing images out to the absolute edges */
         @media (max-width: 600px) {
-            .pic-tl { width: 75px; height: 95px; top: 5%; left: 3%; }
-            .pic-cl { width: 80px; height: 80px; top: 38%; left: -2%; }
-            .pic-bl { width: 70px; height: 90px; bottom: 12%; left: 3%; }
+            .pic-tl { width: 65px; height: 85px; top: 4%; left: 2%; transform: rotate(-10deg); }
+            .pic-cl { width: 70px; height: 70px; top: 40%; left: -5%; transform: rotate(8deg); }
+            .pic-bl { width: 65px; height: 85px; bottom: 4%; left: 2%; transform: rotate(-6deg); }
             
-            .pic-tr { width: 80px; height: 100px; top: 4%; right: 3%; }
-            .pic-cr { width: 75px; height: 95px; top: 40%; right: -2%; }
-            .pic-br { width: 85px; height: 85px; bottom: 12%; right: 3%; }
+            .pic-tr { width: 70px; height: 90px; top: 4%; right: 2%; transform: rotate(12deg); }
+            .pic-cr { width: 65px; height: 85px; top: 42%; right: -5%; transform: rotate(-8deg); }
+            .pic-br { width: 75px; height: 75px; bottom: 4%; right: 2%; transform: rotate(6deg); }
         }
 
+        /* Main Greeting Card Wrapper */
         .greeting-box {
             max-width: 480px;
             width: 100%;
@@ -96,10 +97,20 @@
             position: relative;
             z-index: 10;
             background: rgba(255, 245, 245, 0.4);
-            padding: 20px;
+            padding: 25px;
             border-radius: 24px;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+
+        /* MOBILE FIX FOR MAIN CARD: Making it narrow, transparent, and balanced so it doesn't cover everything */
+        @media (max-width: 480px) {
+            .greeting-box {
+                max-width: 88%;
+                padding: 16px;
+                background: rgba(255, 245, 245, 0.35); /* Softened background bleed */
+            }
         }
 
         /* Portrait Photo Holder (Main Center Image) */
@@ -114,11 +125,27 @@
             animation: fadeInDown 1s ease;
         }
 
+        @media (max-width: 480px) {
+            .profile-pic {
+                width: 130px; /* Reduced to leave visual space for ambient collage items */
+                height: 175px;
+                border: 4px solid white;
+                margin-bottom: 12px;
+            }
+        }
+
         .greeting-box h1 {
             font-size: 2.3rem;
             color: #d63031;
             margin-bottom: 12px;
             animation: fadeInDown 1.2s ease;
+        }
+
+        @media (max-width: 480px) {
+            .greeting-box h1 {
+                font-size: 1.6rem; /* Clean typography that scales without wrapping text awkwardly */
+                margin-bottom: 8px;
+            }
         }
 
         .greeting-box p {
@@ -127,6 +154,14 @@
             margin-bottom: 25px;
             line-height: 1.5;
             animation: fadeInDown 1.4s ease;
+        }
+
+        @media (max-width: 480px) {
+            .greeting-box p {
+                font-size: 0.9rem;
+                margin-bottom: 16px;
+                line-height: 1.4;
+            }
         }
 
         .btn-next {
@@ -142,12 +177,19 @@
             animation: pulseButton 2s infinite ease-in-out;
         }
 
+        @media (max-width: 480px) {
+            .btn-next {
+                padding: 10px 30px;
+                font-size: 1rem;
+            }
+        }
+
         .btn-next:hover {
             transform: scale(1.05);
             background-color: #b82324;
         }
 
-        /* CSS Floating Elements Container */
+        /* Floating Background Elements */
         .floating-bg-item {
             position: absolute;
             bottom: -50px;
@@ -159,13 +201,13 @@
             opacity: 0;
         }
 
-        /* PAGE 2: Letter & Photos (Optimized for scrolling mechanics) */
+        /* PAGE 2: Letter & Photos */
         #page2 {
             background-color: #fff5f5;
             overflow-y: auto;
-            overflow-x: hidden; /* Prevents unwanted sideways mobile jiggle */
+            overflow-x: hidden;
             justify-content: flex-start;
-            padding: 40px 16px; /* Added slight side cushions for mobile screens */
+            padding: 40px 16px;
         }
 
         .container {
@@ -190,7 +232,6 @@
             transition: opacity 1s ease, transform 1s ease;
         }
 
-        /* Adjust letter spacing slightly on smaller displays for enhanced readability */
         @media (max-width: 480px) {
             .letter-box {
                 padding: 20px;
@@ -204,7 +245,7 @@
             transform: translateY(0);
         }
 
-        /* Photo Gallery Styling: Default to side-by-side grids on desktops/tablets */
+        /* Gallery Layout */
         .gallery {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -213,10 +254,9 @@
             align-items: start;
         }
 
-        /* MOBILE OVERRIDE: Stack photos vertically into single-column cards on smaller mobile touchscreens */
         @media (max-width: 500px) {
             .gallery {
-                grid-template-columns: 1fr; /* 1 photo per row so they remain clear and detailed */
+                grid-template-columns: 1fr;
                 gap: 25px;
                 padding: 0 10px;
             }
@@ -227,7 +267,7 @@
             height: auto;
             display: block;
             border: 6px solid white;
-            border-bottom: 18px solid white; /* Classic Polaroid feel */
+            border-bottom: 18px solid white;
             border-radius: 4px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.06);
             opacity: 0;
@@ -240,14 +280,12 @@
             transform: scale(1) translateY(0);
         }
 
-        /* Alternating scrapbooking angles applied globally */
         .gallery img:nth-child(odd) { transform: rotate(-2deg) scale(0.9) translateY(20px); }
         .gallery img:nth-child(even) { transform: rotate(2deg) scale(0.9) translateY(20px); }
 
         .gallery img:nth-child(odd).reveal { transform: rotate(-2deg) scale(1) translateY(0); }
         .gallery img:nth-child(even).reveal { transform: rotate(2deg) scale(1) translateY(0); }
 
-        /* Dynamic focus triggers during desktop hovers or mobile touchscreen touches */
         .gallery img:hover, .gallery img:active {
             transform: scale(1.05) rotate(0deg) !important;
             box-shadow: 0 12px 25px rgba(214, 48, 49, 0.15);
@@ -362,7 +400,6 @@
 
     </div>
 
-    <!-- Canvas Confetti Library Loader -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
@@ -387,7 +424,6 @@
             });
         }
 
-        // Generate floating background elements
         function createAmbientBackground() {
             const page1 = document.getElementById('page1');
             const items = ['🎈', '❤️', '✨', '🎈', '💖'];
