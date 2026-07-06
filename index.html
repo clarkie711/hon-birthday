@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #fff5f5;
+        }
+
+        /* Smooth Page Slider Wrapper */
+        .wrapper {
+            display: flex;
+            width: 200%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* Common Page Styling */
+        .page {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* PAGE 1: Greetings & Ambient Floating Animation */
+        #page1 {
+            background: linear-gradient(135deg, #ffe3e3 0%, #ffd1d1 100%);
+            overflow: hidden;
+        }
+
+        /* Collage Wrapper Area to hold everything together */
+        .collage-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .greeting-box {
+            max-width: 450px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 10; /* Keeps center text & photo above background collage */
+        }
+
+        /* Center Main Photo */
+        .profile-pic {
+            width: 180px;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 6px solid white;
+            box-shadow: 0 10px 25px rgba(214, 48, 49, 0.15);
+            margin-bottom: 25px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .greeting-box h1 {
+            font-size: 2.5rem;
+            color: #d63031;
+            margin-bottom: 15px;
+            animation: fadeInDown 1.2s ease;
+        }
+
+        .greeting-box p {
+            font-size: 1.1rem;
+            color: #636e72;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            animation: fadeInDown 1.4s ease;
+        }
+
+        .btn-next {
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            background-color: #d63031;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+            animation: pulseButton 2s infinite ease-in-out;
+        }
+
+        .btn-next:hover {
+            transform: scale(1.05);
+            background-color: #b82324;
+        }
+
+        /* --- COLLAGE DESIGN STYLING --- */
+        .collage-img {
+            position: absolute;
+            width: 130px;
+            height: 170px;
+            object-fit: cover;
+            border: 5px solid white;
+            border-bottom: 15px solid white; /* Polaroid style cutout */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            z-index: 2;
+            transition: transform 0.3s, z-index 0.3s;
+            animation: fadeInDown 1.5s ease;
+        }
+
+        .collage-img:hover {
+            transform: scale(1.1) rotate(0deg) !important;
+            z-index: 20;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Absolute positions for the 6 side photos */
+        .img-left-1 { left: 5%; top: 15%; transform: rotate(-12deg); }
+        .img-left-2 { left: 10%; top: 45%; transform: rotate(8deg); }
+        .img-left-3 { left: 4%; bottom: 12%; transform: rotate(-5deg); }
+
+        .img-right-1 { right: 5%; top: 12%; transform: rotate(10deg); }
+        .img-right-2 { right: 8%; top: 48%; transform: rotate(-8deg); }
+        .img-right-3 { right: 3%; bottom: 15%; transform: rotate(6deg); }
+
+        /* Responsive scaling down for smaller laptop/tablet screens */
+        @media (max-width: 1024px) {
+            .collage-img {
+                width: 100px;
+                height: 130px;
+            }
+        }
+
+        /* On mobile devices, hide or neatly arrange the collage so it doesn't overlap text */
+        @media (max-width: 768px) {
+            .collage-img {
+                display: none; /* Safely hides background collage layout on narrow mobile screens */
+            }
+        }
+
+        /* CSS Floating Ambient Items Container */
+        .floating-bg-item {
+            position: absolute;
+            bottom: -50px;
+            font-size: 24px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp 6s linear infinite;
+            opacity: 0;
+        }
+
+        /* PAGE 2: Letter & Photos */
+        #page2 {
+            background-color: #fff5f5;
+            overflow-y: auto;
+            justify-content: flex-start;
+            padding-top: 40px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .letter-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            text-align: left;
+            line-height: 1.8;
+            color: #2d3436;
+            font-size: 1.05rem;
+            white-space: pre-line;
+        }
+
+        /* Photo Gallery Styling */
+        .gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.03);
+        }
+
+        /* Hidden Audio Element Container */
+        #audio-container {
+            width: 0;
+            height: 0;
+            position: absolute;
+            visibility: hidden;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseButton {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(214, 48, 49, 0.3); }
+            50% { transform: scale(1.04); box-shadow: 0 6px 22px rgba(214, 48, 49, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(214, 48, 49, 0.3); }
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% {
+                transform: translateY(-105vh) translateX(50px) rotate(20deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper" id="mainWrapper">
+        
+        <!-- PAGE 1: THE GREETING + COLLAGE -->
+        <section class="page" id="page1">
+            
+            <div class="collage-container">
+                <!-- 3 Left Collage Images -->
+                <img src="c1.jpg" alt="Collage 1" class="collage-img img-left-1">
+                <img src="c2.jpg" alt="Collage 2" class="collage-img img-left-2">
+                <img src="c3.jpg" alt="Collage 3" class="collage-img img-left-3">
+
+                <!-- Center UI Content Panel -->
+                <div class="greeting-box">
+                    <img src="myhon.jpg" alt="Birthday Girl" class="profile-pic">
+                    
+                    <h1>Happy Birthday, My Hon! 🎂</h1>
+                    <p>In a world full of variables, you are my favorite constant. I made a little something for you.</p>
+                    <button class="btn-next" onclick="nextPage()">Click Me ❤️</button>
+                </div>
+
+                <!-- 3 Right Collage Images -->
+                <img src="c4.jpg" alt="Collage 4" class="collage-img img-right-1">
+                <img src="c5.jpg" alt="Collage 5" class="collage-img img-right-2">
+                <img src="c6.jpg" alt="Collage 6" class="collage-img img-right-3">
+            </div>
+
+        </section>
+
+        <!-- PAGE 2: THE CONTENT -->
+        <section class="page" id="page2">
+            <div class="container">
+                
+                <div class="letter-box">
+                    <h3>To My Favorite Person,</h3>
+                    
+                    Happy 25th Birthday, My Hon. ❤️
+
+                    Today is all about celebrating you the amazing woman that you are and everything you've become.
+                     
+                    You are one of the strongest, most independent, and most beautiful people I know. Not just beautiful because of your smile, your eyes, or the way you carry yourself, but beautiful because of your heart. The way you care for the people you love, the effort you put into everything you do, the kindness you show even when you're tired, and the way you continue to grow and take care of yourself inspire me more than you know.
+                    
+                    As you turn 25, I hope you take a moment to look back and realize how far you've come. You've overcome challenges, carried responsibilities, chased your goals, and continued moving forward even when things weren't easy. That strength is one of the many reasons I admire you so much.
+                    
+                    Being younger than you by a year has always made me smile because sometimes I feel like I learn so much from you. Your maturity, your determination, and the way you handle life remind me every day of the incredible woman I am lucky enough to love.
+                    
+                    I know you've been incredibly busy lately, working hard and focusing on the things that matter to your future. Even when life gets overwhelming, I hope today gives you a chance to rest, smile, and feel how loved and appreciated you truly are.
+                    
+                    Thank you for all the love, care, effort, patience, and happiness you've brought into my life. Thank you for being someone who makes my days brighter simply by being in them. No matter how many miles separate us, my heart continues to choose you every single day.
+                    
+                    My wish for you this year is simple: may you find success in everything you're working so hard for, peace in moments of stress, confidence during moments of doubt, and endless reasons to smile. May this new chapter of your life bring you closer to your dreams, surround you with genuine happiness, and remind you how special you are to the people who love you.
+                    
+                    And if there's one thing I want you to remember today, it's this:
+                    
+                    You are deeply loved.
+                    You are appreciated.
+                    You are admired.
+                    And you are one of the greatest blessings that has ever come into my life.
+                    
+                    Happy 25th Birthday, my beautiful, caring, awesome, loving girl. ❤️
+                    
+                    I love you more than words can ever fully express, and I can't wait to see all the wonderful things this year has in store for you.
+                    
+                    Forever cheering for you,
+                    Forever caring for you,
+                    Forever supporting you,
+                    Forever loving you,
+                    Your Hon.
+                </div>
+
+                <div class="gallery">
+                    <img src="1.jpg" alt="Our Memory 1">
+                    <img src="2.jpg" alt="Our Memory 2">
+                    <img src="3.jpg" alt="Our Memory 3">
+                    <img src="4.jpg" alt="Our Memory 4">
+                </div>
+
+                <div id="audio-container"></div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Canvas Confetti Library Loader -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        // Load the YouTube Iframe Player API asynchronously
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('audio-container', {
+                height: '0',
+                width: '0',
+                videoId: '1XCUX4mkE4g',
+                playerVars: {
+                    'playsinline': 1,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'modestbranding': 1,
+                    'start': 99
+                }
+            });
+        }
+
+        // Programmatically generate floating background elements
+        function createAmbientBackground() {
+            const page1 = document.getElementById('page1');
+            const items = ['🎈', '❤️', '✨', '🎈', '💖'];
+            const maxItems = 15;
+
+            for (let i = 0; i < maxItems; i++) {
+                const span = document.createElement('span');
+                span.className = 'floating-bg-item';
+                span.innerText = items[Math.floor(Math.random() * items.length)];
+                
+                span.style.left = Math.random() * 100 + '%';
+                span.style.animationDelay = Math.random() * 5 + 's';
+                span.style.animationDuration = 5 + Math.random() * 5 + 's';
+                span.style.fontSize = 16 + Math.random() * 20 + 'px';
+                
+                page1.appendChild(span);
+            }
+        }
+
+        createAmbientBackground();
+
+        function triggerConfettiExplosion() {
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { x: 0, y: 0.8 },
+                colors: ['#d63031', '#ffe3e3', '#ffd1d1', '#ff7675']
+            });
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { x: 1, y: 0.8 },
+                colors: ['#d63031', '#ffe3e3', '#ffd1d1', '#ff7675']
+            });
+        }
+
+        function nextPage() {
+            triggerConfettiExplosion();
+
+            if (player && typeof player.playVideo === 'function') {
+                player.playVideo();
+            }
+
+            document.getElementById('mainWrapper').style.transform = 'translateX(-50%)';
+            
+            setTimeout(() => {
+                document.body.style.overflowY = 'auto';
+                document.documentElement.style.overflowY = 'auto';
+            }, 800);
+        }
+    </script>
+</body>
+</html>
