@@ -54,7 +54,6 @@
             top: 0;
             left: 0;
             z-index: 2;
-            pointer-events: none;
         }
 
         /* Base styling for the 6 scattered collage photos */
@@ -64,7 +63,15 @@
             border: 5px solid white;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             border-radius: 12px;
-            transition: transform 0.3s ease;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+
+        .collage-pic:hover, .collage-pic:active {
+            transform: scale(1.1) rotate(0deg) !important;
+            box-shadow: 0 12px 25px rgba(214, 48, 49, 0.3);
+            z-index: 15;
         }
 
         /* Desktop layout coordinates for the background photos */
@@ -76,15 +83,15 @@
         .pic-cr { width: 110px; height: 140px; top: 45%; right: 5%; transform: rotate(-7deg); }
         .pic-br { width: 130px; height: 130px; bottom: 10%; right: 6%; transform: rotate(4deg); }
 
-        /* MOBILE FIX FOR BACKGROUND PHOTOS: Pushing images out to the absolute edges */
+        /* Mobile framing optimizations */
         @media (max-width: 600px) {
-            .pic-tl { width: 65px; height: 85px; top: 4%; left: 2%; transform: rotate(-10deg); }
-            .pic-cl { width: 70px; height: 70px; top: 40%; left: -5%; transform: rotate(8deg); }
-            .pic-bl { width: 65px; height: 85px; bottom: 4%; left: 2%; transform: rotate(-6deg); }
+            .pic-tl { width: 70px; height: 90px; top: 4%; left: 3%; transform: rotate(-10deg); }
+            .pic-cl { width: 75px; height: 75px; top: 40%; left: -4%; transform: rotate(8deg); }
+            .pic-bl { width: 70px; height: 90px; bottom: 4%; left: 3%; transform: rotate(-6deg); }
             
-            .pic-tr { width: 70px; height: 90px; top: 4%; right: 2%; transform: rotate(12deg); }
-            .pic-cr { width: 65px; height: 85px; top: 42%; right: -5%; transform: rotate(-8deg); }
-            .pic-br { width: 75px; height: 75px; bottom: 4%; right: 2%; transform: rotate(6deg); }
+            .pic-tr { width: 75px; height: 95px; top: 4%; right: 3%; transform: rotate(12deg); }
+            .pic-cr { width: 70px; height: 90px; top: 42%; right: -4%; transform: rotate(-8deg); }
+            .pic-br { width: 80px; height: 80px; bottom: 4%; right: 3%; transform: rotate(6deg); }
         }
 
         /* Main Greeting Card Wrapper */
@@ -102,18 +109,17 @@
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             transition: all 0.3s ease;
+            pointer-events: auto;
         }
 
-        /* MOBILE FIX FOR MAIN CARD: Making it narrow, transparent, and balanced so it doesn't cover everything */
         @media (max-width: 480px) {
             .greeting-box {
-                max-width: 88%;
-                padding: 16px;
-                background: rgba(255, 245, 245, 0.35); /* Softened background bleed */
+                max-width: 86%;
+                padding: 18px;
+                background: rgba(255, 245, 245, 0.4);
             }
         }
 
-        /* Portrait Photo Holder (Main Center Image) */
         .profile-pic {
             width: 180px;
             height: 240px;
@@ -122,12 +128,12 @@
             border: 6px solid white;
             box-shadow: 0 10px 25px rgba(214, 48, 49, 0.15);
             margin-bottom: 20px;
-            animation: fadeInDown 1s ease;
+            animation: fadeInDown 1s ease, heartbeat 3s infinite ease-in-out 1.2s;
         }
 
         @media (max-width: 480px) {
             .profile-pic {
-                width: 130px; /* Reduced to leave visual space for ambient collage items */
+                width: 130px;
                 height: 175px;
                 border: 4px solid white;
                 margin-bottom: 12px;
@@ -143,7 +149,7 @@
 
         @media (max-width: 480px) {
             .greeting-box h1 {
-                font-size: 1.6rem; /* Clean typography that scales without wrapping text awkwardly */
+                font-size: 1.6rem;
                 margin-bottom: 8px;
             }
         }
@@ -189,7 +195,7 @@
             background-color: #b82324;
         }
 
-        /* Floating Background Elements */
+        /* Page 1 Floating Items */
         .floating-bg-item {
             position: absolute;
             bottom: -50px;
@@ -197,30 +203,79 @@
             user-select: none;
             pointer-events: none;
             z-index: 1;
-            animation: floatUp 6s linear infinite;
+            animation: floatUpSway 7s linear infinite;
             opacity: 0;
         }
 
-        /* PAGE 2: Letter & Photos */
+        /* IMAGE POPUP MODAL (LIGHTBOX) SYSTEM */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 85%;
+            max-height: 75%;
+            border: 8px solid white;
+            border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+        }
+
+        .lightbox-modal.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* PAGE 2: Warm Candlelit Glow Effect */
         #page2 {
-            background-color: #fff5f5;
+            background: radial-gradient(circle at center, #fff0f0 0%, #fff5f5 100%);
             overflow-y: auto;
             overflow-x: hidden;
             justify-content: flex-start;
             padding: 40px 16px;
+            animation: ambientGlow 10s infinite ease-in-out;
         }
 
         .container {
             max-width: 600px;
             width: 100%;
             margin: 0 auto;
+            position: relative;
+            z-index: 10; /* Sits above falling effects */
         }
 
         .letter-box {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(214, 48, 49, 0.06);
             margin-bottom: 30px;
             text-align: left;
             line-height: 1.8;
@@ -229,12 +284,13 @@
             white-space: pre-line;
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 1s ease, transform 1s ease;
+            transition: opacity 1.2s ease, transform 1.2s ease;
+            border: 1px solid rgba(255, 182, 193, 0.3);
         }
 
         @media (max-width: 480px) {
             .letter-box {
-                padding: 20px;
+                padding: 22px;
                 font-size: 0.98rem;
                 line-height: 1.7;
             }
@@ -245,7 +301,18 @@
             transform: translateY(0);
         }
 
-        /* Gallery Layout */
+        /* Falling Hearts/Stars Elements on Page 2 */
+        .falling-heart {
+            position: fixed;
+            top: -20px;
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: fallAndSway 8s linear infinite;
+            opacity: 0;
+        }
+
         .gallery {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -271,6 +338,7 @@
             border-radius: 4px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.06);
             opacity: 0;
+            cursor: pointer;
             transform: scale(0.9) translateY(20px);
             transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -299,23 +367,45 @@
             visibility: hidden;
         }
 
-        /* Keyframe Animations */
+        /* Vibrant & Warm Keyframe Animations */
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.03); }
+            40% { transform: scale(1); }
+            55% { transform: scale(1.03); }
+        }
+
         @keyframes pulseButton {
             0% { transform: scale(1); box-shadow: 0 4px 15px rgba(214, 48, 49, 0.3); }
-            50% { transform: scale(1.04); box-shadow: 0 6px 22px rgba(214, 48, 49, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 22px rgba(214, 48, 49, 0.6); }
             100% { transform: scale(1); box-shadow: 0 4px 15px rgba(214, 48, 49, 0.3); }
         }
 
-        @keyframes floatUp {
+        @keyframes floatUpSway {
             0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { transform: translateY(-105vh) translateX(50px) rotate(20deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            50% { transform: translateY(-50vh) translateX(-25px) rotate(-15deg); }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-105vh) translateX(30px) rotate(25deg); opacity: 0; }
+        }
+
+        /* Page 2 Warm Radial Gradient Pulsing */
+        @keyframes ambientGlow {
+            0%, 100% { background: radial-gradient(circle at center, #fff0f0 0%, #fff5f5 100%); }
+            50% { background: radial-gradient(circle at center, #ffebd3 0%, #fff5f5 100%); } /* Comforting golden hue */
+        }
+
+        /* Downward floating effect for cozy reading atmosphere */
+        @keyframes fallAndSway {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.5; }
+            85% { opacity: 0.5; }
+            100% { transform: translateY(105vh) translateX(40px) rotate(45deg); opacity: 0; }
         }
     </style>
 </head>
@@ -323,17 +413,16 @@
 
     <div class="wrapper" id="mainWrapper">
         
-        <!-- PAGE 1: THE GREETING WITH COMPREHENSIVE COLLAGE -->
         <section class="page" id="page1">
             
             <div class="collage-container">
-                <img src="collage1.jpg" alt="Memory 1" class="collage-pic pic-tl">
-                <img src="collage2.jpg" alt="Memory 2" class="collage-pic pic-cl">
-                <img src="collage3.jpg" alt="Memory 3" class="collage-pic pic-bl">
+                <img src="collage1.jpg" alt="Memory 1" class="collage-pic pic-tl" onclick="openLightbox(this)">
+                <img src="collage2.jpg" alt="Memory 2" class="collage-pic pic-cl" onclick="openLightbox(this)">
+                <img src="collage3.jpg" alt="Memory 3" class="collage-pic pic-bl" onclick="openLightbox(this)">
                 
-                <img src="collage4.jpg" alt="Memory 4" class="collage-pic pic-tr">
-                <img src="collage5.jpg" alt="Memory 5" class="collage-pic pic-cr">
-                <img src="collage6.jpg" alt="Memory 6" class="collage-pic pic-br">
+                <img src="collage4.jpg" alt="Memory 4" class="collage-pic pic-tr" onclick="openLightbox(this)">
+                <img src="collage5.jpg" alt="Memory 5" class="collage-pic pic-cr" onclick="openLightbox(this)">
+                <img src="collage6.jpg" alt="Memory 6" class="collage-pic pic-br" onclick="openLightbox(this)">
             </div>
             
             <div class="greeting-box">
@@ -345,7 +434,6 @@
             </div>
         </section>
 
-        <!-- PAGE 2: THE CONTENT WITH SCROLL-DRIVEN REVEALS -->
         <section class="page" id="page2">
             <div class="container">
                 
@@ -387,10 +475,10 @@
                 </div>
 
                 <div class="gallery" id="photoGallery">
-                    <img src="1.jpg" alt="Our Memory 1">
-                    <img src="2.jpg" alt="Our Memory 2">
-                    <img src="3.jpg" alt="Our Memory 3">
-                    <img src="4.jpg" alt="Our Memory 4">
+                    <img src="1.jpg" alt="Our Memory 1" onclick="openLightbox(this)">
+                    <img src="2.jpg" alt="Our Memory 2" onclick="openLightbox(this)">
+                    <img src="3.jpg" alt="Our Memory 3" onclick="openLightbox(this)">
+                    <img src="4.jpg" alt="Our Memory 4" onclick="openLightbox(this)">
                 </div>
 
                 <div id="audio-container"></div>
@@ -398,6 +486,11 @@
             </div>
         </section>
 
+    </div>
+
+    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightboxImg">
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -424,6 +517,7 @@
             });
         }
 
+        // Ambient elements for Page 1 (Upward)
         function createAmbientBackground() {
             const page1 = document.getElementById('page1');
             const items = ['🎈', '❤️', '✨', '🎈', '💖'];
@@ -443,7 +537,39 @@
             }
         }
 
+        // Ambient elements for Page 2 (Downward falling)
+        function createWarmDownwardEffects() {
+            const page2 = document.getElementById('page2');
+            const icons = ['❤️', '✨', '🌸', '💖', '✨'];
+            const count = 12;
+
+            for (let i = 0; i < count; i++) {
+                const span = document.createElement('span');
+                span.className = 'falling-heart';
+                span.innerText = icons[Math.floor(Math.random() * icons.length)];
+                
+                span.style.left = Math.random() * 100 + '%';
+                span.style.animationDelay = Math.random() * 6 + 's';
+                span.style.animationDuration = 6 + Math.random() * 6 + 's';
+                span.style.fontSize = 14 + Math.random() * 16 + 'px';
+                
+                page2.appendChild(span);
+            }
+        }
+
         createAmbientBackground();
+
+        function openLightbox(element) {
+            const modal = document.getElementById('lightboxModal');
+            const modalImg = document.getElementById('lightboxImg');
+            modal.classList.add('active');
+            modalImg.src = element.src;
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.remove('active');
+        }
 
         function triggerConfettiExplosion() {
             confetti({
@@ -468,6 +594,9 @@
             }
 
             document.getElementById('mainWrapper').style.transform = 'translateX(-50%)';
+            
+            // Spawn the down-falling effects on page 2 when transitioning
+            createWarmDownwardEffects();
             
             setTimeout(() => {
                 document.body.style.overflowY = 'auto';
